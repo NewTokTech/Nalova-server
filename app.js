@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 app.use(cors({
-  origin: ['https://nalova-react.vercel.app/', 'http://localhost:3000'],
+  origin: ['https://nalova-react.vercel.app', 'http://localhost:3000'],
   credentials: true
 }));
 
