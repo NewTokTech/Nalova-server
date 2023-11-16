@@ -83,7 +83,7 @@ router.post(
       if (!newSeller) {
         return next(new ErrorHandler("Invalid token", 400));
       }
-      const { name, email, password, avatar, zipCode, address, phoneNumber } =  newSeller;
+      const { name, email, password, avatar, zipCode, address, phoneNumber } = newSeller;
 
       let seller = await Shop.findOne({ email });
 
@@ -207,26 +207,26 @@ router.put(
     try {
       let existsSeller = await Shop.findById(req.seller._id);
 
-        const imageId = existsSeller.avatar.public_id;
+      const imageId = existsSeller.avatar.public_id;
 
-        await cloudinary.v2.uploader.destroy(imageId);
+      await cloudinary.v2.uploader.destroy(imageId);
 
-        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-          folder: "avatars",
-          width: 150,
-        });
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 150,
+      });
 
-        existsSeller.avatar = {
-          public_id: myCloud.public_id,
-          url: myCloud.secure_url,
-        };
+      existsSeller.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
 
-  
+
       await existsSeller.save();
 
       res.status(200).json({
         success: true,
-        seller:existsSeller,
+        seller: existsSeller,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -361,23 +361,21 @@ router.delete(
   })
 );
 
-router.post('/Addcategory',isSeller, catchAsyncErrors(async(req,res,next)=>{
+router.post('/Addcategory', isSeller, catchAsyncErrors(async (req, res, next) => {
   try {
     const seller = await Shop.findById(req.seller._id);
 
     if (!seller) {
       return next(new ErrorHandler("Seller not found with this id", 400));
     }
-    
+
     // console.log(req.body.category,"req body ");
 
-   const categoryData =new Category({
-    category:req.body.category
-   })
-    // console.log('--------------------------------');
+    const categoryData = new Category({
+      category: req.body.category
+    })
 
-    // console.log(categoryData,"category");
-   await categoryData.save()
+    await categoryData.save()
 
 
     res.status(201).json({
@@ -392,23 +390,20 @@ router.post('/Addcategory',isSeller, catchAsyncErrors(async(req,res,next)=>{
 )
 
 
-router.post('/addSize',isSeller, catchAsyncErrors(async(req,res,next)=>{
+router.post('/addSize', isSeller, catchAsyncErrors(async (req, res, next) => {
   try {
     const seller = await Shop.findById(req.seller._id);
 
     if (!seller) {
       return next(new ErrorHandler("Seller not found with this id", 400));
     }
-    
-    // console.log(req.body.size,"req body ");
 
-   const sizeData =new Size({
-    size:req.body.size
-   })
-    // console.log('--------------------------------');
 
-    // console.log(sizeData,"category");
-   await sizeData.save()
+    const sizeData = new Size({
+      size: req.body.size
+    })
+
+    await sizeData.save()
 
 
     res.status(201).json({
@@ -425,22 +420,16 @@ router.post('/addSize',isSeller, catchAsyncErrors(async(req,res,next)=>{
 
 
 
-router.get('/getSize',isSeller, catchAsyncErrors(async(req,res,next)=>{
+router.get('/getSize', isSeller, catchAsyncErrors(async (req, res, next) => {
   try {
     const seller = await Shop.findById(req.seller._id);
 
     if (!seller) {
       return next(new ErrorHandler("Seller not found with this id", 400));
     }
-    
+
     const sizeData = await Size.find()
 
-    // console.log('--------------------------------');
-
-    // console.log(sizeData,"category");
-  //  await sizeData.save()
-
-
     res.status(201).json({
       success: true,
       sizeData,
@@ -452,5 +441,25 @@ router.get('/getSize',isSeller, catchAsyncErrors(async(req,res,next)=>{
 })
 
 )
+
+
+router.get(
+  "/getCategory",
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      console.log('getCategory called with category ');
+      const categoryData = await Category.find()
+      console.log(categoryData, "categoryData");
+      res.status(201).json({
+        success: true,
+        categoryData,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
 
 module.exports = router;

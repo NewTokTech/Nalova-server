@@ -8,6 +8,7 @@ const Shop = require("../model/shop");
 const cloudinary = require("cloudinary");
 const ErrorHandler = require("../utils/ErrorHandler");
 const ProductSize = require("../model/productSize")
+const Category = require("../model/category");
 
 // create product
 router.post(
@@ -240,5 +241,8 @@ router.post(
     }
   })
 );
+
+
+
 
 module.exports = router;
