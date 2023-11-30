@@ -205,7 +205,7 @@ router.get(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const productsSize = await ProductSize.findOne({ productId: req.params.id })
+      const productsSize = await Product.findOne({ _id: req.params.id })
       res.status(201).json({
         success: true,
         productsSize,
@@ -223,8 +223,9 @@ router.post(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const productsSizeData = await ProductSize.findOne({ productId: req.body.productId })
+      const productsSizeData = await Product.findOne({ _id: req.body.productId })
       productsSizeData.productSize = req.body.stock
+      console.log(productsSizeData,"productsSizeData");
       await productsSizeData.save()
       const products = await Product.findOne({ _id: req.body.productId })
       products.productSize = req.body.stock
